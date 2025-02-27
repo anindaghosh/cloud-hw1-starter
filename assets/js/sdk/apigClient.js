@@ -34,7 +34,7 @@ apigClientFactory.newClient = function (config) {
         config.secretKey = '';
     }
     if(config.apiKey === undefined) {
-        config.apiKey = '';
+        config.apiKey = 'MpiLm4op4U6b1JNMJnpig6vEhI5VgmS11BFXbLhV';
     }
     if(config.sessionToken === undefined) {
         config.sessionToken = '';
@@ -95,6 +95,8 @@ apigClientFactory.newClient = function (config) {
             queryParams: apiGateway.core.utils.parseParametersToObject(params, []),
             body: body
         };
+
+        console.log(config.apiKey)
         
         
         return apiGatewayClient.makeRequest(chatbotPostRequest, authType, additionalParams, config.apiKey);

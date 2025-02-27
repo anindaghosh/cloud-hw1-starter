@@ -25,7 +25,7 @@ $(document).ready(function() {
     }
   }
 
-  function callChatbotApi(message) {
+  function callChatbotApi(message, sessionId) {
     // params, body, additionalParams
     return sdk.chatbotPost({}, {
       messages: [{
@@ -33,7 +33,8 @@ $(document).ready(function() {
         unstructured: {
           text: message
         }
-      }]
+      }],
+      sessionId: sessionId
     }, {});
   }
 
@@ -47,17 +48,34 @@ $(document).ready(function() {
     $('.message-input').val(null);
     updateScrollbar();
 
-    callChatbotApi(msg)
+    if (!window.sessionId) {
+      window.sessionId = null;
+    }
+
+    callChatbotApi(msg, window.sessionId)
       .then((response) => {
         console.log(response);
         var data = response.data;
 
+        console.log(data)
+
+        if (data.session_id) {
+          window.sessionId = data.session_id;
+          console.log('received sessionId: ' + window.sessionId);
+        }
+
+
         if (data.messages && data.messages.length > 0) {
           console.log('received ' + data.messages.length + ' messages');
 
+          console.log(data)
+
           var messages = data.messages;
 
+          console.log(messages);
+
           for (var message of messages) {
+            console.log(message)
             if (message.type === 'unstructured') {
               insertResponseMessage(message.unstructured.text);
             } else if (message.type === 'structured' && message.structured.type === 'product') {
